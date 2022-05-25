@@ -14,8 +14,8 @@ import java.util.UUID;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "companies")
-public class Company {
+@Table(name = "customers")
+public class Customer {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -27,18 +27,27 @@ public class Company {
     @Type(type = "uuid-char")
     private UUID id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "nip", nullable = false)
+    private String nip;
 
     @Column(name = "street", nullable = false)
     private String street;
 
-    @Column(name = "postal_code", nullable = false)
-    private String postalCode;
-
     @Column(name = "city", nullable = false)
     private String city;
 
-    @Column(name = "country", nullable = false)
+    @Column(name = "country")
     private String country;
+
+    @Column(name = "description")
+    private String description;
 }

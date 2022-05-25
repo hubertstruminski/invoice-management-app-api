@@ -7,6 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.UUID;
 
 @Data
@@ -14,8 +15,8 @@ import java.util.UUID;
 @NoArgsConstructor
 
 @Entity
-@Table(name = "companies")
-public class Company {
+@Table(name = "invoices")
+public class Invoice {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -27,18 +28,18 @@ public class Company {
     @Type(type = "uuid-char")
     private UUID id;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "number", nullable = false)
+    private String number;
 
-    @Column(name = "street", nullable = false)
-    private String street;
+    @Column(name = "date", nullable = false)
+    private Date date;
 
-    @Column(name = "postal_code", nullable = false)
-    private String postalCode;
+    @Column(name = "deadline", nullable = false)
+    private Date deadline;
 
-    @Column(name = "city", nullable = false)
-    private String city;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "country", nullable = false)
-    private String country;
+    @Column(name = "sent_status", nullable = false)
+    private boolean sentStatus;
 }
