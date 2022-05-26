@@ -7,6 +7,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -50,4 +52,7 @@ public class Customer {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(mappedBy = "customer")
+    private List<Invoice> invoices = new ArrayList<>();
 }

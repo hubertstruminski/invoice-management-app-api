@@ -7,7 +7,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -42,4 +44,11 @@ public class Invoice {
 
     @Column(name = "sent_status", nullable = false)
     private boolean sentStatus;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
+
+    @OneToMany(mappedBy = "invoice")
+    private List<Product> products = new ArrayList<>();
 }

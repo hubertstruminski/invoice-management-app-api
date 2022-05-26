@@ -7,7 +7,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -35,4 +35,7 @@ public class Tax {
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(mappedBy = "tax")
+    private List<Product> products = new ArrayList<>();
 }

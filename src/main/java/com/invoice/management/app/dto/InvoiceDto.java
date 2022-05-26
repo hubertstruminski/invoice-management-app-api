@@ -1,5 +1,6 @@
 package com.invoice.management.app.dto;
 
+import com.invoice.management.app.validation.ValidTodayDate;
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
@@ -20,7 +21,10 @@ public class InvoiceDto {
     @Pattern(regexp = "\\d{6}", message = "Invalid number")
     private String number;
 
+    @ValidTodayDate
     private Date date;
+
+    @Future(message = "Deadline field must be date in future")
     private Date deadline;
 
     private String description;

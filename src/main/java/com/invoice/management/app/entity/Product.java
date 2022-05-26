@@ -44,4 +44,12 @@ public class Product {
 
     @Column(name = "description")
     private String description;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "tax_id", nullable = false)
+    private Tax tax;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "invoice_id", nullable = false)
+    private Invoice invoice;
 }
