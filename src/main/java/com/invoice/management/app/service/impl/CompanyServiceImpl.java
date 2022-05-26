@@ -5,8 +5,8 @@ import com.invoice.management.app.entity.Company;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.CompanyRepository;
 import com.invoice.management.app.service.CompanyService;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
