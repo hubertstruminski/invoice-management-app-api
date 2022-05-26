@@ -44,7 +44,7 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCompany(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<Void> deleteCompany(@PathVariable(name = "id") UUID id) {
         companyService.deleteCompany(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
