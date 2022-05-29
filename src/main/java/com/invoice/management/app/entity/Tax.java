@@ -1,10 +1,9 @@
 package com.invoice.management.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.*;
@@ -18,14 +17,9 @@ import java.util.*;
 public class Tax {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
-    @Type(type = "uuid-char")
-    private UUID id;
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -37,5 +31,6 @@ public class Tax {
     private String description;
 
     @OneToMany(mappedBy = "tax")
+    @JsonIgnore
     private List<Product> products = new ArrayList<>();
 }

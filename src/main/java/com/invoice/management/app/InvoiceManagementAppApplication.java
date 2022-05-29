@@ -16,5 +16,4 @@ public class InvoiceManagementAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(InvoiceManagementAppApplication.class, args);
 	}
-
 }

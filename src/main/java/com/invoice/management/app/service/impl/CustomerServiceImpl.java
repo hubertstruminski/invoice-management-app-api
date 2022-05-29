@@ -10,15 +10,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     private CustomerServiceImpl(CustomerRepository customerRepository, ModelMapper mapper) {
         this.customerRepository = customerRepository;
@@ -30,24 +29,23 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = mapToEntity(customerDto);
         Customer newCustomer = customerRepository.save(customer);
 
-        CustomerDto customerResponse = mapToDTO(newCustomer);
-        return customerResponse;
+        return mapToDTO(newCustomer);
     }
 
     @Override
     public List<CustomerDto> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();
-        return customers.stream().map(customer -> mapToDTO(customer)).collect(Collectors.toList());
+        return customers.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public CustomerDto getCustomerById(UUID id) {
+    public CustomerDto getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
         return mapToDTO(customer);
     }
 
     @Override
-    public CustomerDto updateCustomer(CustomerDto customerDto, UUID id) {
+    public CustomerDto updateCustomer(CustomerDto customerDto, Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
 
         customer.setFullName(customerDto.getFullName());
@@ -64,7 +62,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void deleteCustomer(UUID id) {
+    public void deleteCustomer(Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
         customerRepository.delete(customer);
     }

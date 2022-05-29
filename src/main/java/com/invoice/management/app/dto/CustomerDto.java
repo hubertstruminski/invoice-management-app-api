@@ -6,26 +6,24 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
-import java.util.UUID;
-
 @Data
 public class CustomerDto {
 
-    private UUID id;
+    private Long id;
 
     @NotBlank(message = "Full name field is required")
     private String fullName;
 
     @NotBlank(message = "Email field is required")
-    @Email(message = "Invalid email")
+    @Email(regexp = ".+[@].+[\\.].+", message = "Invalid email")
     private String email;
 
-    @Pattern(regexp = "\\[\\+\\d{2}\\]\\s{1}\\d{3}\\s{1}\\d{3}\\s{1}\\d{3}",
-            message = "Invalid format! Use [+00] [123] [456] [789] format")
+    @Pattern(regexp = "[^A-Za-z]+",
+            message = "Invalid phone number! You can not use letters")
     private String phoneNumber;
 
     @NotBlank(message = "NIP field is required")
-    @Pattern(regexp = "\\d{10}", message = "Invalid format")
+    @Pattern(regexp = "\\d{10}", message = "NIP field has invalid format")
     private String nip;
 
     @NotBlank(message = "Street field is required")

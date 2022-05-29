@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/companies")
 public class CompanyController {
 
-    private CompanyService companyService;
+    private final CompanyService companyService;
 
     public CompanyController(CompanyService companyService) {
         this.companyService = companyService;
@@ -31,20 +30,20 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompanyDto> getCompanyById(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<CompanyDto> getCompanyById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(companyService.getCompanyById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CompanyDto> updateCompany(
             @Valid @RequestBody CompanyDto companyDto,
-            @PathVariable(name = "id") UUID id) {
+            @PathVariable(name = "id") Long id) {
         CompanyDto companyResponse = companyService.updateCompany(companyDto, id);
         return new ResponseEntity<>(companyResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCompany(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<Void> deleteCompany(@PathVariable(name = "id") Long id) {
         companyService.deleteCompany(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

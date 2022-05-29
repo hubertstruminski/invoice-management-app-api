@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/invoices")
 public class InvoiceController {
 
-    private InvoiceService invoiceService;
+    private final InvoiceService invoiceService;
 
     public InvoiceController(InvoiceService invoiceService) {
         this.invoiceService = invoiceService;
@@ -31,20 +30,20 @@ public class InvoiceController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InvoiceDto> getInvoiceById(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<InvoiceDto> getInvoiceById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(invoiceService.getInvoiceById(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<InvoiceDto> updateInvoice(
             @Valid @RequestBody InvoiceDto invoiceDto,
-            @PathVariable(name = "id") UUID id) {
+            @PathVariable(name = "id") Long id) {
         InvoiceDto invoiceResponse = invoiceService.updateInvoice(invoiceDto, id);
         return new ResponseEntity<>(invoiceResponse, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable(name = "id") UUID id) {
+    public ResponseEntity<Void> deleteCustomer(@PathVariable(name = "id") Long id) {
         invoiceService.deleteInvoice(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

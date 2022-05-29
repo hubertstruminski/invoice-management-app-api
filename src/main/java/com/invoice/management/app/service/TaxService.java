@@ -1,10 +1,8 @@
 package com.invoice.management.app.service;
 
-import com.invoice.management.app.dto.CompanyDto;
 import com.invoice.management.app.dto.TaxDto;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface TaxService {
 
@@ -12,9 +10,9 @@ public interface TaxService {
 
     List<TaxDto> getAllTaxes();
 
-    TaxDto getTaxById(UUID id);
+    TaxDto getTaxById(Long id);
 
-    TaxDto updateTax(TaxDto taxDto, UUID id);
+    TaxDto updateTax(TaxDto taxDto, Long id);
 
-    void deleteTax(UUID id);
+    void deleteTax(Long id);
 }

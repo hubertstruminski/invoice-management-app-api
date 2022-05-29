@@ -7,6 +7,8 @@ import javax.validation.Payload;
 
 import java.lang.annotation.*;
 
+import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 @Target({ ElementType.FIELD })
@@ -30,14 +32,17 @@ class TodayDateValidator implements ConstraintValidator<ValidTodayDate, Date> {
     }
 
     @Override
-    public boolean isValid(Date date, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(Date date, ConstraintValidatorContext context) {
         Date now = new Date();
-        System.out.println("isValid");
-        if(now.compareTo(date) == 0) {
-            System.out.println(now.compareTo((date)));
-            return true;
+
+        if(date == null) {
+            context.disableDefaultConstraintViolation();
+            context
+                    .buildConstraintViolationWithTemplate("Date can not be null")
+                    .addConstraintViolation();
+            return false;
         }
-        System.out.println("return false");
-        return false;
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(date).equals(fmt.format(now));
     }
 }

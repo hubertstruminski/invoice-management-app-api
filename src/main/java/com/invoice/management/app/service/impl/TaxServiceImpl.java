@@ -10,15 +10,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class TaxServiceImpl implements TaxService {
 
-    private TaxRepository taxRepository;
+    private final TaxRepository taxRepository;
 
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     private TaxServiceImpl(TaxRepository taxRepository, ModelMapper mapper) {
         this.taxRepository = taxRepository;
@@ -30,24 +29,23 @@ public class TaxServiceImpl implements TaxService {
         Tax tax = mapToEntity(taxDto);
         Tax newTax = taxRepository.save(tax);
 
-        TaxDto taxResponse = mapToDTO(newTax);
-        return taxResponse;
+        return mapToDTO(newTax);
     }
 
     @Override
     public List<TaxDto> getAllTaxes() {
         List<Tax> taxes = taxRepository.findAll();
-        return taxes.stream().map(tax -> mapToDTO(tax)).collect(Collectors.toList());
+        return taxes.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public TaxDto getTaxById(UUID id) {
+    public TaxDto getTaxById(Long id) {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
         return mapToDTO(tax);
     }
 
     @Override
-    public TaxDto updateTax(TaxDto taxDto, UUID id) {
+    public TaxDto updateTax(TaxDto taxDto, Long id) {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
 
         tax.setName(taxDto.getName());
@@ -59,7 +57,7 @@ public class TaxServiceImpl implements TaxService {
     }
 
     @Override
-    public void deleteTax(UUID id) {
+    public void deleteTax(Long id) {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
         taxRepository.delete(tax);
     }

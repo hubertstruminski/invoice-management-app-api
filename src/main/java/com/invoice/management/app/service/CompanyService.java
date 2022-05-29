@@ -3,7 +3,6 @@ package com.invoice.management.app.service;
 import com.invoice.management.app.dto.CompanyDto;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface CompanyService {
 
@@ -11,9 +10,9 @@ public interface CompanyService {
 
     List<CompanyDto> getAllCompanies();
 
-    CompanyDto getCompanyById(UUID id);
+    CompanyDto getCompanyById(Long id);
 
-    CompanyDto updateCompany(CompanyDto companyDto, UUID id);
+    CompanyDto updateCompany(CompanyDto companyDto, Long id);
 
-    void deleteCompany(UUID id);
+    void deleteCompany(Long id);
 }

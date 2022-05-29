@@ -1,10 +1,8 @@
 package com.invoice.management.app.service;
 
-import com.invoice.management.app.dto.CompanyDto;
 import com.invoice.management.app.dto.InvoiceDto;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface InvoiceService {
 
@@ -12,9 +10,9 @@ public interface InvoiceService {
 
     List<InvoiceDto> getAllInvoices();
 
-    InvoiceDto getInvoiceById(UUID id);
+    InvoiceDto getInvoiceById(Long id);
 
-    InvoiceDto updateInvoice(InvoiceDto invoiceDto, UUID id);
+    InvoiceDto updateInvoice(InvoiceDto invoiceDto, Long id);
 
-    void deleteInvoice(UUID id);
+    void deleteInvoice(Long id);
 }

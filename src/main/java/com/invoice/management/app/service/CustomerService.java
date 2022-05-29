@@ -1,10 +1,8 @@
 package com.invoice.management.app.service;
 
-import com.invoice.management.app.dto.CompanyDto;
 import com.invoice.management.app.dto.CustomerDto;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface CustomerService {
 
@@ -12,9 +10,9 @@ public interface CustomerService {
 
     List<CustomerDto> getAllCustomers();
 
-    CustomerDto getCustomerById(UUID id);
+    CustomerDto getCustomerById(Long id);
 
-    CustomerDto updateCustomer(CustomerDto customerDto, UUID id);
+    CustomerDto updateCustomer(CustomerDto customerDto, Long id);
 
-    void deleteCustomer(UUID id);
+    void deleteCustomer(Long id);
 }

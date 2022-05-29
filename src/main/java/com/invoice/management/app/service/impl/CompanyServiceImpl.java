@@ -10,15 +10,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
 
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
 
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
     private CompanyServiceImpl(CompanyRepository companyRepository, ModelMapper mapper) {
         this.companyRepository = companyRepository;
@@ -30,24 +29,23 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = mapToEntity(companyDto);
         Company newCompany = companyRepository.save(company);
 
-        CompanyDto companyResponse = mapToDTO(newCompany);
-        return companyResponse;
+        return mapToDTO(newCompany);
     }
 
     @Override
     public List<CompanyDto> getAllCompanies() {
         List<Company> companies = companyRepository.findAll();
-        return companies.stream().map(company -> mapToDTO(company)).collect(Collectors.toList());
+        return companies.stream().map(this::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public CompanyDto getCompanyById(UUID id) {
+    public CompanyDto getCompanyById(Long id) {
         Company company = companyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company", "id", id.toString()));
         return mapToDTO(company);
     }
 
     @Override
-    public CompanyDto updateCompany(CompanyDto companyDto, UUID id) {
+    public CompanyDto updateCompany(CompanyDto companyDto, Long id) {
         Company company = companyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company", "id", id.toString()));
 
         company.setName(companyDto.getName());
@@ -61,7 +59,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void deleteCompany(UUID id) {
+    public void deleteCompany(Long id) {
         Company company = companyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company", "id", id.toString()));
         companyRepository.delete(company);
     }

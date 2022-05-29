@@ -2,20 +2,14 @@ package com.invoice.management.app.dto;
 
 import com.invoice.management.app.validation.ValidTodayDate;
 import lombok.Data;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.*;
 import java.util.Date;
-import java.util.UUID;
 
 @Data
 public class InvoiceDto {
 
-    private UUID id;
+    private Long id;
 
     @NotBlank(message = "Number field is required")
     @Pattern(regexp = "\\d{6}", message = "Invalid number")
@@ -31,4 +25,7 @@ public class InvoiceDto {
 
     @NotNull(message = "Sent status field is required")
     private boolean sentStatus;
+
+    @NotNull(message = "Customer field is required")
+    private Long customerId;
 }
