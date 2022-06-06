@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -40,6 +41,11 @@ public class Invoice {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-//    @OneToMany(mappedBy = "invoice")
-//    private List<Product> products = new ArrayList<>();
+    @ManyToMany()
+    @JoinTable(
+            name = "invoices_products",
+            joinColumns = @JoinColumn(name = "invoice_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
+    )
+    private List<Product> products;
 }

@@ -1,18 +1,19 @@
 package com.invoice.management.app.service;
 
-import com.invoice.management.app.dto.InvoiceDto;
+import com.invoice.management.app.dto.PersistableInvoiceDto;
+import com.invoice.management.app.dto.ReadableInvoiceDto;
 
 import java.util.List;
 
 public interface InvoiceService {
 
-    InvoiceDto createInvoice(InvoiceDto invoiceDto);
+    ReadableInvoiceDto createInvoice(PersistableInvoiceDto invoiceDto);
 
-    List<InvoiceDto> getAllInvoices();
+    List<ReadableInvoiceDto> getAllInvoices();
 
-    InvoiceDto getInvoiceById(Long id);
+    ReadableInvoiceDto getInvoiceById(Long id);
 
-    InvoiceDto updateInvoice(InvoiceDto invoiceDto, Long id);
+    ReadableInvoiceDto updateInvoice(PersistableInvoiceDto invoiceDto, Long id);
 
     void deleteInvoice(Long id);
 }

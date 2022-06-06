@@ -14,14 +14,12 @@ public class ProductDto {
     private String name;
 
     @NotNull(message = "Price field is required")
-//    @Pattern(regexp = "\\d+\\.\\d{2}", message = "Invalid price! Use 0.00 format")
-    private int price;
+    private Integer price;
 
     @NotNull(message = "Amount field is required")
-//    @Pattern(regexp = "\\d+", message = "Invalid amount. Use number")
-    private int amount;
+    private Integer amount;
 
-    private int discount;
+    private Integer discount;
 
     @NotBlank(message = "Unit field is required")
     private String unit;

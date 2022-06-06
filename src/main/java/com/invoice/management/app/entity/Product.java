@@ -1,10 +1,13 @@
 package com.invoice.management.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -41,7 +44,20 @@ public class Product {
     @JoinColumn(name = "tax_id", nullable = false)
     private Tax tax;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "invoice_id")
-//    private Invoice invoice;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "products")
+    private List<Invoice> invoices;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id.equals(product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

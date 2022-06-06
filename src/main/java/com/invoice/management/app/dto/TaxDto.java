@@ -1,6 +1,7 @@
 package com.invoice.management.app.dto;
 
 import com.invoice.management.app.entity.Product;
+
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -17,7 +18,7 @@ public class TaxDto {
     private String name;
 
     @NotNull(message = "Amount field is required")
-    private int amount;
+    private Integer amount;
 
     private String description;
 
