@@ -9,8 +9,8 @@ import org.mapstruct.*;
 public interface CompanyMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void mapToDTO(Company company, @MappingTarget CompanyDto companyDto);
+    CompanyDto mapToDTO(Company company, @MappingTarget CompanyDto companyDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void mapToEntity(CompanyDto companyDto, @MappingTarget Company company);
+    Company mapToEntity(CompanyDto companyDto, @MappingTarget Company company);
 }

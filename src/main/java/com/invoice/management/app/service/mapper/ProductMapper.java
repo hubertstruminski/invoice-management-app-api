@@ -18,16 +18,15 @@ public abstract class ProductMapper {
 
     @Mapping(source = "product.tax", target = "productDto.taxId", qualifiedByName = "taxToId")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract void mapToDTO(Product product, @MappingTarget ProductDto productDto);
+    public abstract ProductDto mapToDTO(Product product, @MappingTarget ProductDto productDto);
 
     @Mapping(source = "productDto.taxId", target = "product.tax", qualifiedByName = "idToTax")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract void mapToEntity(ProductDto productDto, @MappingTarget Product product);
+    public abstract Product mapToEntity(ProductDto productDto, @MappingTarget Product product);
 
     @Named("idToTax")
     public Tax mapIdToTax(Long id) {
-        Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
-        return tax;
+        return taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
     }
 
     @Named("taxToId")

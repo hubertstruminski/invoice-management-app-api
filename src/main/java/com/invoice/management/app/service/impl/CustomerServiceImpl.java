@@ -5,9 +5,8 @@ import com.invoice.management.app.entity.Customer;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.CustomerRepository;
 import com.invoice.management.app.service.CustomerService;
-
 import com.invoice.management.app.service.mapper.CustomerMapper;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +16,7 @@ import java.util.stream.Collectors;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
-
-//    private final ModelMapper mapper;
-    private CustomerMapper mapper;
+    private final CustomerMapper mapper;
 
     private CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper mapper) {
         this.customerRepository = customerRepository;
@@ -28,13 +25,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDto createCustomer(CustomerDto customerDto) {
-        Customer customer = new Customer();
-        mapper.mapToEntity(customerDto, customer);
+        Customer customer = mapper.mapToEntity(customerDto, new Customer());
 
         Customer newCustomer = customerRepository.save(customer);
 
-        mapper.mapToDTO(newCustomer, customerDto);
-        return customerDto;
+        return mapper.mapToDTO(newCustomer, new CustomerDto());
     }
 
     @Override
@@ -42,45 +37,23 @@ public class CustomerServiceImpl implements CustomerService {
         List<Customer> customers = customerRepository.findAll();
         return customers
                 .stream()
-                .map(customer -> {
-                    CustomerDto customerDto = new CustomerDto();
-                    mapper.mapToDTO(customer, customerDto);
-
-                    return customerDto;
-                })
+                .map(customer -> mapper.mapToDTO(customer, new CustomerDto()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public CustomerDto getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
-
-        CustomerDto customerDto = new CustomerDto();
-        mapper.mapToDTO(customer, customerDto);
-
-        return customerDto;
+        return mapper.mapToDTO(customer, new CustomerDto());
     }
 
     @Override
     public CustomerDto updateCustomer(CustomerDto customerDto, Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
-
-//        customer.setFullName(customerDto.getFullName());
-//        customer.setEmail(customerDto.getEmail());
-//        customer.setCity(customerDto.getCity());
-//        customer.setCountry(customerDto.getCountry());
-//        customer.setStreet(customerDto.getStreet());
-//        customer.setPhoneNumber(customerDto.getPhoneNumber());
-//        customer.setNip(customerDto.getNip());
-//        customer.setDescription(customerDto.getDescription());
         mapper.mapToEntity(customerDto, customer);
 
         Customer updatedCustomer = customerRepository.save(customer);
-
-        CustomerDto updatedCustomerDto = new CustomerDto();
-        mapper.mapToDTO(updatedCustomer, updatedCustomerDto);
-
-        return updatedCustomerDto;
+        return mapper.mapToDTO(updatedCustomer, new CustomerDto());
     }
 
     @Override
@@ -88,12 +61,4 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
         customerRepository.delete(customer);
     }
-
-//    private CustomerDto mapToDTO(Customer customer) {
-//        return mapper.map(customer, CustomerDto.class);
-//    }
-//
-//    private Customer mapToEntity(CustomerDto customerDto) {
-//        return mapper.map(customerDto, Customer.class);
-//    }
 }

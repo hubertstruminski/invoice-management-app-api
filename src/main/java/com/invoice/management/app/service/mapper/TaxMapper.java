@@ -12,8 +12,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface TaxMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void mapToDTO(Tax tax, @MappingTarget TaxDto taxDto);
+    TaxDto mapToDTO(Tax tax, @MappingTarget TaxDto taxDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void mapToEntity(TaxDto taxDto, @MappingTarget Tax tax);
+    Tax mapToEntity(TaxDto taxDto, @MappingTarget Tax tax);
 }

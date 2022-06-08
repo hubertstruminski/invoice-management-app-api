@@ -12,8 +12,8 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface CustomerMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void mapToDTO(Customer customer, @MappingTarget CustomerDto customerDto);
+    CustomerDto mapToDTO(Customer customer, @MappingTarget CustomerDto customerDto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    void mapToEntity(CustomerDto customerDto, @MappingTarget Customer customer);
+    Customer mapToEntity(CustomerDto customerDto, @MappingTarget Customer customer);
 }

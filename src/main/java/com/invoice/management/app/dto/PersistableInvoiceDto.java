@@ -3,12 +3,14 @@ package com.invoice.management.app.dto;
 import com.invoice.management.app.validation.MinOneElementList;
 import com.invoice.management.app.validation.ValidTodayDate;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class PersistableInvoiceDto {
 
     private Long id;

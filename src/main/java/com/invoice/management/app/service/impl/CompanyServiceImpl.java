@@ -5,10 +5,8 @@ import com.invoice.management.app.entity.Company;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.CompanyRepository;
 import com.invoice.management.app.service.CompanyService;
-
 import com.invoice.management.app.service.mapper.CompanyMapper;
-import com.invoice.management.app.service.mapper.InvoiceMapper;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,9 +16,7 @@ import java.util.stream.Collectors;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
-
-//    private final ModelMapper mapper;
-    private CompanyMapper mapper;
+    private final CompanyMapper mapper;
 
     private CompanyServiceImpl(CompanyRepository companyRepository, CompanyMapper mapper) {
         this.companyRepository = companyRepository;
@@ -29,40 +25,26 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDto createCompany(CompanyDto companyDto) {
-        Company company = new Company();
-        mapper.mapToEntity(companyDto, company);
+        Company company = mapper.mapToEntity(companyDto, new Company());
 
         Company newCompany = companyRepository.save(company);
 
-        CompanyDto newCompanyDto = new CompanyDto();
-        mapper.mapToDTO(newCompany, newCompanyDto);
-
-        return newCompanyDto;
+        return mapper.mapToDTO(newCompany, new CompanyDto());
     }
 
     @Override
     public List<CompanyDto> getAllCompanies() {
         List<Company> companies = companyRepository.findAll();
-//        this::mapToDTO
         return companies
                 .stream()
-                .map(company -> {
-                    CompanyDto companyDto = new CompanyDto();
-                    mapper.mapToDTO(company, companyDto);
-
-                    return companyDto;
-                })
+                .map(company -> mapper.mapToDTO(company, new CompanyDto()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public CompanyDto getCompanyById(Long id) {
         Company company = companyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company", "id", id.toString()));
-
-        CompanyDto companyDto = new CompanyDto();
-        mapper.mapToDTO(company, companyDto);
-
-        return companyDto;
+        return mapper.mapToDTO(company, new CompanyDto());
     }
 
     @Override
@@ -78,10 +60,7 @@ public class CompanyServiceImpl implements CompanyService {
         mapper.mapToEntity(companyDto, company);
         Company updatedCompany = companyRepository.save(company);
 
-        CompanyDto updatedCompanyDto = new CompanyDto();
-        mapper.mapToDTO(updatedCompany, updatedCompanyDto);
-
-        return updatedCompanyDto;
+        return mapper.mapToDTO(updatedCompany, new CompanyDto());
     }
 
     @Override
@@ -89,12 +68,4 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = companyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company", "id", id.toString()));
         companyRepository.delete(company);
     }
-
-//    private CompanyDto mapToDTO(Company company) {
-//        return mapper.map(company, CompanyDto.class);
-//    }
-//
-//    private Company mapToEntity(CompanyDto companyDto) {
-//        return mapper.map(companyDto, Company.class);
-//    }
 }

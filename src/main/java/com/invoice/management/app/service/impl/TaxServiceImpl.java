@@ -5,9 +5,8 @@ import com.invoice.management.app.entity.Tax;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.TaxRepository;
 import com.invoice.management.app.service.TaxService;
-
 import com.invoice.management.app.service.mapper.TaxMapper;
-import org.modelmapper.ModelMapper;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +16,7 @@ import java.util.stream.Collectors;
 public class TaxServiceImpl implements TaxService {
 
     private final TaxRepository taxRepository;
-
-//    private final ModelMapper mapper;
-    private TaxMapper mapper;
+    private final TaxMapper mapper;
 
     private TaxServiceImpl(TaxRepository taxRepository, TaxMapper mapper) {
         this.taxRepository = taxRepository;
@@ -28,15 +25,10 @@ public class TaxServiceImpl implements TaxService {
 
     @Override
     public TaxDto createTax(TaxDto taxDto) {
-        Tax tax = new Tax();
-        mapper.mapToEntity(taxDto, tax);
-
+        Tax tax = mapper.mapToEntity(taxDto, new Tax());
         Tax newTax = taxRepository.save(tax);
 
-        TaxDto updatedTaxDto = new TaxDto();
-        mapper.mapToDTO(newTax, updatedTaxDto);
-
-        return updatedTaxDto;
+        return mapper.mapToDTO(newTax, new TaxDto());
     }
 
     @Override
@@ -44,12 +36,7 @@ public class TaxServiceImpl implements TaxService {
         List<Tax> taxes = taxRepository.findAll();
         return taxes
                 .stream()
-                .map(tax -> {
-                    TaxDto taxDto = new TaxDto();
-                    mapper.mapToDTO(tax, taxDto);
-
-                    return taxDto;
-                })
+                .map(tax -> mapper.mapToDTO(tax, new TaxDto()))
                 .collect(Collectors.toList());
     }
 
@@ -57,26 +44,17 @@ public class TaxServiceImpl implements TaxService {
     public TaxDto getTaxById(Long id) {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
 
-        TaxDto taxDto = new TaxDto();
-        mapper.mapToDTO(tax, taxDto);
-
-        return taxDto;
+        return mapper.mapToDTO(tax, new TaxDto());
     }
 
     @Override
     public TaxDto updateTax(TaxDto taxDto, Long id) {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
 
-//        tax.setName(taxDto.getName());
-//        tax.setAmount(taxDto.getAmount());
-//        tax.setDescription(taxDto.getDescription());
         mapper.mapToEntity(taxDto, tax);
         Tax updatedTax = taxRepository.save(tax);
 
-        TaxDto updatedTaxDto = new TaxDto();
-        mapper.mapToDTO(updatedTax, updatedTaxDto);
-
-        return updatedTaxDto;
+        return mapper.mapToDTO(updatedTax, new TaxDto());
     }
 
     @Override
@@ -84,12 +62,4 @@ public class TaxServiceImpl implements TaxService {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
         taxRepository.delete(tax);
     }
-
-//    private TaxDto mapToDTO(Tax tax) {
-//        return mapper.map(tax, TaxDto.class);
-//    }
-//
-//    private Tax mapToEntity(TaxDto taxDto) {
-//        return mapper.map(taxDto, Tax.class);
-//    }
 }

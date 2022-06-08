@@ -31,7 +31,7 @@ public abstract class InvoiceMapper {
 
     @Mapping(source = "invoice.customer", target = "invoiceDto.customerId", qualifiedByName = "customerToId")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    public abstract void mapToReadableDTO(Invoice invoice, @MappingTarget ReadableInvoiceDto invoiceDto);
+    public abstract ReadableInvoiceDto mapToReadableDTO(Invoice invoice, @MappingTarget ReadableInvoiceDto invoiceDto);
 
     @Named("idsToProducts")
     public List<Product> mapIdsToProducts(List<Long> ids) {
@@ -46,8 +46,7 @@ public abstract class InvoiceMapper {
 
     @Named("customerIdToCustomer")
     public Customer mapCustomerIdToCustomer(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
-        return customer;
+        return customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
     }
 
     @Named("customerToId")
