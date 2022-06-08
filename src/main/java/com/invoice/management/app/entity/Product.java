@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -46,7 +47,7 @@ public class Product {
 
     @JsonIgnore
     @ManyToMany(mappedBy = "products")
-    private List<Invoice> invoices;
+    private Set<Invoice> invoices;
 
     @Override
     public boolean equals(Object o) {

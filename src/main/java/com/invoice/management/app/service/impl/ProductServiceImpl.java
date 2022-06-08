@@ -1,8 +1,10 @@
 package com.invoice.management.app.service.impl;
 
 import com.invoice.management.app.dto.ProductDto;
+import com.invoice.management.app.entity.Invoice;
 import com.invoice.management.app.entity.Product;
 import com.invoice.management.app.exception.ResourceNotFoundException;
+import com.invoice.management.app.repository.InvoiceRepository;
 import com.invoice.management.app.repository.ProductRepository;
 import com.invoice.management.app.repository.TaxRepository;
 import com.invoice.management.app.service.ProductService;
@@ -10,6 +12,8 @@ import com.invoice.management.app.service.mapper.ProductMapper;
 
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PreRemove;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,14 +21,17 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
     private final TaxRepository taxRepository;
+    private final InvoiceRepository invoiceRepository;
     private final ProductMapper mapper;
 
-    private ProductServiceImpl(ProductRepository productRepository,
-                               TaxRepository taxRepository, ProductMapper mapper) {
+    public ProductServiceImpl(ProductRepository productRepository,
+                               TaxRepository taxRepository,
+                              InvoiceRepository invoiceRepository,
+                              ProductMapper mapper) {
         this.productRepository = productRepository;
         this.taxRepository = taxRepository;
+        this.invoiceRepository = invoiceRepository;
         this.mapper = mapper;
     }
 
@@ -65,8 +72,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void deleteProduct(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id.toString()));
+
+        for(Invoice invoice: product.getInvoices()) {
+            invoice.removeProduct(product);
+        }
         productRepository.delete(product);
     }
 }

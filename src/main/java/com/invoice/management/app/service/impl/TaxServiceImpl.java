@@ -1,6 +1,8 @@
 package com.invoice.management.app.service.impl;
 
 import com.invoice.management.app.dto.TaxDto;
+import com.invoice.management.app.entity.Invoice;
+import com.invoice.management.app.entity.Product;
 import com.invoice.management.app.entity.Tax;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.TaxRepository;
@@ -9,6 +11,7 @@ import com.invoice.management.app.service.mapper.TaxMapper;
 
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +21,7 @@ public class TaxServiceImpl implements TaxService {
     private final TaxRepository taxRepository;
     private final TaxMapper mapper;
 
-    private TaxServiceImpl(TaxRepository taxRepository, TaxMapper mapper) {
+    public TaxServiceImpl(TaxRepository taxRepository, TaxMapper mapper) {
         this.taxRepository = taxRepository;
         this.mapper = mapper;
     }
@@ -58,8 +61,17 @@ public class TaxServiceImpl implements TaxService {
     }
 
     @Override
+    @Transactional
     public void deleteTax(Long id) {
         Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
+        List<Product> products = tax.getProducts();
+
+        for(Product product: products) {
+            for(Invoice invoice: product.getInvoices()) {
+                invoice.removeProduct(product);
+            }
+        }
+
         taxRepository.delete(tax);
     }
 }

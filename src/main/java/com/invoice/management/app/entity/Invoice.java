@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -47,5 +48,10 @@ public class Invoice {
             joinColumns = @JoinColumn(name = "invoice_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private List<Product> products;
+    private Set<Product> products;
+
+    public void removeProduct(Product product) {
+        products.remove(product);
+        product.getInvoices().remove(this);
+    }
 }

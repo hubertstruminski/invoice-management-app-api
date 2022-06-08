@@ -30,7 +30,7 @@ public class Tax {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "tax")
+    @OneToMany(mappedBy = "tax", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
 }

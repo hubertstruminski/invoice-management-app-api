@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
@@ -34,14 +35,14 @@ public abstract class InvoiceMapper {
     public abstract ReadableInvoiceDto mapToReadableDTO(Invoice invoice, @MappingTarget ReadableInvoiceDto invoiceDto);
 
     @Named("idsToProducts")
-    public List<Product> mapIdsToProducts(List<Long> ids) {
+    public Set<Product> mapIdsToProducts(List<Long> ids) {
         return ids
                 .stream()
                 .map(productId -> {
                     Optional<Product> foundProduct = productRepository.findById(productId);
                     return foundProduct.get();
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     @Named("customerIdToCustomer")

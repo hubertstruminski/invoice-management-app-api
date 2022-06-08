@@ -59,11 +59,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     public ReadableInvoiceDto updateInvoice(PersistableInvoiceDto invoiceDto, Long id) {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Invoice", "id", id.toString()));
-        List<Product> beforeProducts = invoice.getProducts();
+        Set<Product> beforeProducts = invoice.getProducts();
 
         mapper.mapPersistableDTOToEntity(invoiceDto, invoice);
 
-        List<Product> mergedProducts = mergeProducts(beforeProducts, invoice.getProducts());
+        Set<Product> mergedProducts = mergeProducts(beforeProducts, invoice.getProducts());
         invoice.setProducts(mergedProducts);
         Invoice updatedInvoice = invoiceRepository.save(invoice);
 
@@ -76,11 +76,11 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceRepository.delete(invoice);
     }
 
-    private List<Product> mergeProducts(List<Product> first, List<Product> second) {
+    private Set<Product> mergeProducts(Set<Product> first, Set<Product> second) {
         Set<Product> collection = new HashSet<>(first);
         collection.addAll(second);
 
-        return new ArrayList<>(collection);
+        return new HashSet<>(collection);
     }
 }
 
