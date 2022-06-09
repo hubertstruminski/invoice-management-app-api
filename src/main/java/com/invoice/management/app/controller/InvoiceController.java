@@ -5,6 +5,7 @@ import com.invoice.management.app.dto.ReadableInvoiceDto;
 import com.invoice.management.app.service.InvoiceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,6 +21,7 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ReadableInvoiceDto> createInvoice(@Valid @RequestBody PersistableInvoiceDto invoiceDto) {
         return new ResponseEntity<>(invoiceService.createInvoice(invoiceDto), HttpStatus.CREATED);
@@ -35,6 +37,7 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.getInvoiceById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ReadableInvoiceDto> updateInvoice(
             @Valid @RequestBody PersistableInvoiceDto invoiceDto,
@@ -43,6 +46,7 @@ public class InvoiceController {
         return new ResponseEntity<>(invoiceResponse, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable(name = "id") Long id) {
         invoiceService.deleteInvoice(id);
