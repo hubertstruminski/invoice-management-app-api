@@ -1,18 +1,19 @@
 package com.invoice.management.app.service;
 
-import com.invoice.management.app.dto.ProductDto;
+import com.invoice.management.app.dto.PersistableProductDto;
+import com.invoice.management.app.dto.ReadableProductDto;
 
 import java.util.List;
 
 public interface ProductService {
 
-    ProductDto createProduct(ProductDto productDto);
+    ReadableProductDto createProduct(PersistableProductDto persistableProductDto);
 
-    List<ProductDto> getAllProducts();
+    List<ReadableProductDto> getAllProducts();
 
-    ProductDto getProductById(Long id);
+    ReadableProductDto getProductById(Long id);
 
-    ProductDto updateProduct(ProductDto productDto, Long id);
+    ReadableProductDto updateProduct(PersistableProductDto persistableProductDto, Long id);
 
     void deleteProduct(Long id);
 }

@@ -1,6 +1,7 @@
 package com.invoice.management.app.controller;
 
-import com.invoice.management.app.dto.ProductDto;
+import com.invoice.management.app.dto.PersistableProductDto;
+import com.invoice.management.app.dto.ReadableProductDto;
 import com.invoice.management.app.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,25 +21,25 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
-        return new ResponseEntity<>(productService.createProduct(productDto), HttpStatus.CREATED);
+    public ResponseEntity<ReadableProductDto> createProduct(@Valid @RequestBody PersistableProductDto persistableProductDto) {
+        return new ResponseEntity<>(productService.createProduct(persistableProductDto), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<ProductDto> getAllProducts() {
+    public List<ReadableProductDto> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getProductById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<ReadableProductDto> getProductById(@PathVariable(name = "id") Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDto> updateProduct(
-            @Valid @RequestBody ProductDto productDto,
+    public ResponseEntity<ReadableProductDto> updateProduct(
+            @Valid @RequestBody PersistableProductDto persistableProductDto,
             @PathVariable(name = "id") Long id) {
-        ProductDto productResponse = productService.updateProduct(productDto, id);
+        ReadableProductDto productResponse = productService.updateProduct(persistableProductDto, id);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 

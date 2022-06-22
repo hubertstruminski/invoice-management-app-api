@@ -19,8 +19,7 @@ public class PersistableInvoiceDto {
     @Pattern(regexp = "\\d{6}", message = "Invalid number field")
     private String number;
 
-    @ValidTodayDate
-    private Date date;
+    private Date date = new Date();
 
     @Future(message = "Deadline field must be date in future")
     private Date deadline;

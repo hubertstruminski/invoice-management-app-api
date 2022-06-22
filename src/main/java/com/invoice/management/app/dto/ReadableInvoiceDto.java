@@ -1,5 +1,6 @@
 package com.invoice.management.app.dto;
 
+import com.invoice.management.app.entity.Customer;
 import com.invoice.management.app.entity.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,7 @@ public class ReadableInvoiceDto {
     private Date deadline;
     private String description;
     private boolean sentStatus;
-    private Long customerId;
+//    private Long customerId;
+    private Customer customer;
     private List<Product> products;
 }

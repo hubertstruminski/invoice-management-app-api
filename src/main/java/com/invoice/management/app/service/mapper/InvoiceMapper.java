@@ -30,7 +30,7 @@ public abstract class InvoiceMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract Invoice mapPersistableDTOToEntity(PersistableInvoiceDto invoiceDto, @MappingTarget Invoice invoice);
 
-    @Mapping(source = "invoice.customer", target = "invoiceDto.customerId", qualifiedByName = "customerToId")
+//    @Mapping(source = "invoice.customer", target = "invoiceDto.customerId", qualifiedByName = "customerToId")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract ReadableInvoiceDto mapToReadableDTO(Invoice invoice, @MappingTarget ReadableInvoiceDto invoiceDto);
 
@@ -50,8 +50,8 @@ public abstract class InvoiceMapper {
         return customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
     }
 
-    @Named("customerToId")
-    public Long mapCustomerToId(Customer customer) {
-        return customer.getId();
-    }
+//    @Named("customerToId")
+//    public Long mapCustomerToId(Customer customer) {
+//        return customer.getId();
+//    }
 }

@@ -21,7 +21,7 @@ public class InvoiceController {
         this.invoiceService = invoiceService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER')")
     @PostMapping
     public ResponseEntity<ReadableInvoiceDto> createInvoice(@Valid @RequestBody PersistableInvoiceDto invoiceDto) {
         return new ResponseEntity<>(invoiceService.createInvoice(invoiceDto), HttpStatus.CREATED);
@@ -37,7 +37,7 @@ public class InvoiceController {
         return ResponseEntity.ok(invoiceService.getInvoiceById(id));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('USER')")
     @PutMapping("/{id}")
     public ResponseEntity<ReadableInvoiceDto> updateInvoice(
             @Valid @RequestBody PersistableInvoiceDto invoiceDto,
@@ -46,7 +46,7 @@ public class InvoiceController {
         return new ResponseEntity<>(invoiceResponse, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable(name = "id") Long id) {
         invoiceService.deleteInvoice(id);

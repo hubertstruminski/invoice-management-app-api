@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class ProductDto {
+public class PersistableProductDto {
 
     private Long id;
 
@@ -26,6 +26,7 @@ public class ProductDto {
 
     @NotNull(message = "Tax field is required")
     private Long taxId;
+//    private Tax tax;
 
     private String description;
 }
