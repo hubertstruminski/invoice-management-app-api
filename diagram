@@ -1,0 +1,165 @@
+classDiagram
+direction BT
+class ApiException
+class AuthController
+class Company
+class CompanyController
+class CompanyDto
+class CompanyMapper {
+<<Interface>>
+
+}
+class CompanyMapperImpl
+class CompanyRepository {
+<<Interface>>
+
+}
+class CompanyService {
+<<Interface>>
+
+}
+class CompanyServiceImpl
+class CustomUserDetailsService
+class Customer
+class CustomerController
+class CustomerDto
+class CustomerMapper {
+<<Interface>>
+
+}
+class CustomerMapperImpl
+class CustomerRepository {
+<<Interface>>
+
+}
+class CustomerService {
+<<Interface>>
+
+}
+class CustomerServiceImpl
+class EmptyListValidator
+class Error
+class GlobalExceptionHandler
+class Invoice
+class InvoiceController
+class InvoiceManagementAppApplication
+class InvoiceManagementAppApplicationTests
+class InvoiceMapper
+class InvoiceMapperImpl
+class InvoiceRepository {
+<<Interface>>
+
+}
+class InvoiceService {
+<<Interface>>
+
+}
+class InvoiceServiceImpl
+class JWTAuthDto
+class JwtAuthenticationEntryPoint
+class JwtAuthenticationFilter
+class JwtTokenProvider
+class LoginDto
+class MinOneElementList
+class PasswordEncoderGenerator
+class PersistableInvoiceDto
+class PersistableProductDto
+class Product
+class ProductController
+class ProductMapper
+class ProductMapperImpl
+class ProductRepository {
+<<Interface>>
+
+}
+class ProductService {
+<<Interface>>
+
+}
+class ProductServiceImpl
+class ReadableInvoiceDto
+class ReadableProductDto
+class ResourceNotFoundException
+class Role
+class RoleRepository {
+<<Interface>>
+
+}
+class SecurityConfig
+class SignUpDto
+class SwaggerConfig
+class Tax
+class TaxController
+class TaxDto
+class TaxMapper {
+<<Interface>>
+
+}
+class TaxMapperImpl
+class TaxRepository {
+<<Interface>>
+
+}
+class TaxService {
+<<Interface>>
+
+}
+class TaxServiceImpl
+class TodayDateValidator
+class User
+class UserRepository {
+<<Interface>>
+
+}
+class ValidTodayDate
+
+AuthController "1" *--> "tokenProvider 1" JwtTokenProvider 
+AuthController "1" *--> "roleRepository 1" RoleRepository 
+AuthController "1" *--> "userRepository 1" UserRepository 
+CompanyController "1" *--> "companyService 1" CompanyService 
+CompanyMapperImpl  ..>  CompanyMapper 
+CompanyServiceImpl "1" *--> "mapper 1" CompanyMapper 
+CompanyServiceImpl "1" *--> "companyRepository 1" CompanyRepository 
+CompanyServiceImpl  ..>  CompanyService 
+CustomUserDetailsService "1" *--> "userRepository 1" UserRepository 
+Customer "1" *--> "invoices *" Invoice 
+CustomerController "1" *--> "customerService 1" CustomerService 
+CustomerMapperImpl  ..>  CustomerMapper 
+CustomerServiceImpl "1" *--> "mapper 1" CustomerMapper 
+CustomerServiceImpl "1" *--> "customerRepository 1" CustomerRepository 
+CustomerServiceImpl  ..>  CustomerService 
+Invoice "1" *--> "customer 1" Customer 
+Invoice "1" *--> "products *" Product 
+InvoiceController "1" *--> "invoiceService 1" InvoiceService 
+InvoiceMapper "1" *--> "customerRepository 1" CustomerRepository 
+InvoiceMapper "1" *--> "productRepository 1" ProductRepository 
+InvoiceMapperImpl  -->  InvoiceMapper 
+InvoiceServiceImpl "1" *--> "customerRepository 1" CustomerRepository 
+InvoiceServiceImpl "1" *--> "mapper 1" InvoiceMapper 
+InvoiceServiceImpl "1" *--> "invoiceRepository 1" InvoiceRepository 
+InvoiceServiceImpl  ..>  InvoiceService 
+JwtAuthenticationFilter "1" *--> "customUserDetailsService 1" CustomUserDetailsService 
+JwtAuthenticationFilter "1" *--> "tokenProvider 1" JwtTokenProvider 
+Product "1" *--> "invoices *" Invoice 
+Product "1" *--> "tax 1" Tax 
+ProductController "1" *--> "productService 1" ProductService 
+ProductMapper "1" *--> "taxRepository 1" TaxRepository 
+ProductMapperImpl  -->  ProductMapper 
+ProductServiceImpl "1" *--> "invoiceRepository 1" InvoiceRepository 
+ProductServiceImpl "1" *--> "mapper 1" ProductMapper 
+ProductServiceImpl "1" *--> "productRepository 1" ProductRepository 
+ProductServiceImpl  ..>  ProductService 
+ProductServiceImpl "1" *--> "taxRepository 1" TaxRepository 
+ReadableInvoiceDto "1" *--> "customer 1" Customer 
+ReadableInvoiceDto "1" *--> "products *" Product 
+ReadableProductDto "1" *--> "tax 1" Tax 
+SecurityConfig "1" *--> "customUserDetailsService 1" CustomUserDetailsService 
+SecurityConfig "1" *--> "authenticationEntryPoint 1" JwtAuthenticationEntryPoint 
+Tax "1" *--> "products *" Product 
+TaxController "1" *--> "taxService 1" TaxService 
+TaxDto "1" *--> "products *" Product 
+TaxMapperImpl  ..>  TaxMapper 
+TaxServiceImpl "1" *--> "mapper 1" TaxMapper 
+TaxServiceImpl "1" *--> "taxRepository 1" TaxRepository 
+TaxServiceImpl  ..>  TaxService 
+User "1" *--> "roles *" Role 

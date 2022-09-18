@@ -50,4 +50,8 @@ public class Customer {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Invoice> invoices = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

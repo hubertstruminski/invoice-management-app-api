@@ -50,6 +50,10 @@ public class Invoice {
     )
     private Set<Product> products;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     public void removeProduct(Product product) {
         products.remove(product);
         product.getInvoices().remove(this);

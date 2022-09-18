@@ -18,7 +18,6 @@ public class ReadableInvoiceDto {
     private Date deadline;
     private String description;
     private boolean sentStatus;
-//    private Long customerId;
     private Customer customer;
     private List<Product> products;
 }

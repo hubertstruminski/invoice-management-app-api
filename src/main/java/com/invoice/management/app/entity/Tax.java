@@ -33,4 +33,8 @@ public class Tax {
     @OneToMany(mappedBy = "tax", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
