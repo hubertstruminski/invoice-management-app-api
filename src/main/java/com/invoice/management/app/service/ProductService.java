@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface ProductService {
 
-    ReadableProductDto createProduct(PersistableProductDto persistableProductDto);
+    ReadableProductDto createProduct(PersistableProductDto persistableProductDto, Long userId);
 
-    List<ReadableProductDto> getAllProducts();
+    List<ReadableProductDto> getAllProducts(Long userId);
 
-    ReadableProductDto getProductById(Long id);
+    ReadableProductDto getProductById(Long id, Long userId);
 
     ReadableProductDto updateProduct(PersistableProductDto persistableProductDto, Long id);
 

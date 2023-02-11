@@ -2,8 +2,10 @@ package com.invoice.management.app.service.impl;
 
 import com.invoice.management.app.dto.CustomerDto;
 import com.invoice.management.app.entity.Customer;
+import com.invoice.management.app.entity.User;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.CustomerRepository;
+import com.invoice.management.app.repository.UserRepository;
 import com.invoice.management.app.service.CustomerService;
 import com.invoice.management.app.service.mapper.CustomerMapper;
 
@@ -16,16 +18,22 @@ import java.util.stream.Collectors;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final CustomerMapper mapper;
 
-    private CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper mapper) {
+    private CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper mapper, UserRepository userRepository) {
         this.customerRepository = customerRepository;
         this.mapper = mapper;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public CustomerDto createCustomer(CustomerDto customerDto) {
+    public CustomerDto createCustomer(CustomerDto customerDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId.toString()));
+
         Customer customer = mapper.mapToEntity(customerDto, new Customer());
+        customer.setUser(user);
 
         Customer newCustomer = customerRepository.save(customer);
 
@@ -33,8 +41,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDto> getAllCustomers() {
-        List<Customer> customers = customerRepository.findAll();
+    public List<CustomerDto> getAllCustomers(Long userId) {
+        List<Customer> customers = customerRepository.findAll(userId);
         return customers
                 .stream()
                 .map(customer -> mapper.mapToDTO(customer, new CustomerDto()))
@@ -42,8 +50,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto getCustomerById(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
+    public CustomerDto getCustomerById(Long id, Long userId) {
+        Customer customer = customerRepository.findById(id, userId);
+        if(customer == null) {
+            throw new ResourceNotFoundException("Customer", "id", id.toString());
+        }
         return mapper.mapToDTO(customer, new CustomerDto());
     }
 

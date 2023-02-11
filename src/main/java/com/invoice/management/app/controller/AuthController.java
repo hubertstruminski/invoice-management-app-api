@@ -50,7 +50,9 @@ public class AuthController {
                         loginDto.getEmail(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwtToken = tokenProvider.generateToken(authentication);
+        User user = userRepository.findByEmail(loginDto.getEmail()).get();
+
+        String jwtToken = tokenProvider.generateToken(authentication, user.getId());
 
         return ResponseEntity.ok(new JWTAuthDto(jwtToken));
     }

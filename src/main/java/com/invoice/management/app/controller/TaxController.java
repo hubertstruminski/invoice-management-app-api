@@ -1,7 +1,10 @@
 package com.invoice.management.app.controller;
 
+import com.invoice.management.app.dto.ReadableProductDto;
 import com.invoice.management.app.dto.TaxDto;
+import com.invoice.management.app.security.JwtTokenProvider;
 import com.invoice.management.app.service.TaxService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,24 +17,31 @@ import java.util.List;
 public class TaxController {
 
     private final TaxService taxService;
+    private final JwtTokenProvider tokenProvider;
 
-    public TaxController(TaxService taxService) {
+    public TaxController(TaxService taxService, JwtTokenProvider tokenProvider) {
         this.taxService = taxService;
+        this.tokenProvider = tokenProvider;
     }
 
     @PostMapping
-    public ResponseEntity<TaxDto> createTax(@Valid @RequestBody TaxDto taxDto) {
-        return new ResponseEntity<>(taxService.createTax(taxDto), HttpStatus.CREATED);
+    public ResponseEntity<TaxDto> createTax(@Valid @RequestBody TaxDto taxDto,
+                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        return new ResponseEntity<>(taxService.createTax(taxDto, userId), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<TaxDto> getAllTaxes() {
-        return taxService.getAllTaxes();
+    public List<TaxDto> getAllTaxes(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        return taxService.getAllTaxes(userId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaxDto> getTaxById(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(taxService.getTaxById(id));
+    public ResponseEntity<TaxDto> getTaxById(@PathVariable(name = "id") Long id,
+                                             @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        return ResponseEntity.ok(taxService.getTaxById(id, userId));
     }
 
     @PutMapping("/{id}")

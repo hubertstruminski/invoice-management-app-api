@@ -4,8 +4,10 @@ import com.invoice.management.app.dto.TaxDto;
 import com.invoice.management.app.entity.Invoice;
 import com.invoice.management.app.entity.Product;
 import com.invoice.management.app.entity.Tax;
+import com.invoice.management.app.entity.User;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.TaxRepository;
+import com.invoice.management.app.repository.UserRepository;
 import com.invoice.management.app.service.TaxService;
 import com.invoice.management.app.service.mapper.TaxMapper;
 
@@ -19,24 +21,31 @@ import java.util.stream.Collectors;
 public class TaxServiceImpl implements TaxService {
 
     private final TaxRepository taxRepository;
+    private final UserRepository userRepository;
     private final TaxMapper mapper;
 
-    public TaxServiceImpl(TaxRepository taxRepository, TaxMapper mapper) {
+    public TaxServiceImpl(TaxRepository taxRepository, TaxMapper mapper, UserRepository userRepository) {
         this.taxRepository = taxRepository;
         this.mapper = mapper;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public TaxDto createTax(TaxDto taxDto) {
+    public TaxDto createTax(TaxDto taxDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId.toString()));
+
         Tax tax = mapper.mapToEntity(taxDto, new Tax());
+        tax.setUser(user);
+
         Tax newTax = taxRepository.save(tax);
 
         return mapper.mapToDTO(newTax, new TaxDto());
     }
 
     @Override
-    public List<TaxDto> getAllTaxes() {
-        List<Tax> taxes = taxRepository.findAll();
+    public List<TaxDto> getAllTaxes(Long userId) {
+        List<Tax> taxes = taxRepository.findAll(userId);
         return taxes
                 .stream()
                 .map(tax -> mapper.mapToDTO(tax, new TaxDto()))
@@ -44,9 +53,11 @@ public class TaxServiceImpl implements TaxService {
     }
 
     @Override
-    public TaxDto getTaxById(Long id) {
-        Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
-
+    public TaxDto getTaxById(Long id, Long userId) {
+        Tax tax = taxRepository.findById(id, userId);
+        if(tax == null) {
+            throw new ResourceNotFoundException("Tax", "id", id.toString());
+        }
         return mapper.mapToDTO(tax, new TaxDto());
     }
 

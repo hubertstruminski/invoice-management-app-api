@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface InvoiceService {
 
-    ReadableInvoiceDto createInvoice(PersistableInvoiceDto invoiceDto);
+    ReadableInvoiceDto createInvoice(PersistableInvoiceDto invoiceDto, Long userId);
 
-    List<ReadableInvoiceDto> getAllInvoices();
+    List<ReadableInvoiceDto> getAllInvoices(Long userId);
 
-    ReadableInvoiceDto getInvoiceById(Long id);
+    ReadableInvoiceDto getInvoiceById(Long id, Long userId);
 
     ReadableInvoiceDto updateInvoice(PersistableInvoiceDto invoiceDto, Long id);
 

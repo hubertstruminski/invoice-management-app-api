@@ -4,10 +4,12 @@ import com.invoice.management.app.dto.PersistableProductDto;
 import com.invoice.management.app.dto.ReadableProductDto;
 import com.invoice.management.app.entity.Invoice;
 import com.invoice.management.app.entity.Product;
+import com.invoice.management.app.entity.User;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.InvoiceRepository;
 import com.invoice.management.app.repository.ProductRepository;
 import com.invoice.management.app.repository.TaxRepository;
+import com.invoice.management.app.repository.UserRepository;
 import com.invoice.management.app.service.ProductService;
 import com.invoice.management.app.service.mapper.ProductMapper;
 
@@ -23,32 +25,39 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final TaxRepository taxRepository;
     private final InvoiceRepository invoiceRepository;
+    private final UserRepository userRepository;
     private final ProductMapper mapper;
 
     public ProductServiceImpl(ProductRepository productRepository,
                                TaxRepository taxRepository,
                               InvoiceRepository invoiceRepository,
-                              ProductMapper mapper) {
+                              ProductMapper mapper,
+                              UserRepository userRepository) {
         this.productRepository = productRepository;
         this.taxRepository = taxRepository;
         this.invoiceRepository = invoiceRepository;
         this.mapper = mapper;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public ReadableProductDto createProduct(PersistableProductDto persistableProductDto) {
+    public ReadableProductDto createProduct(PersistableProductDto persistableProductDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId.toString()));
+
         Long taxId = persistableProductDto.getTaxId();
         taxRepository.findById(taxId).orElseThrow(() ->  new ResourceNotFoundException("Tax", "id", taxId.toString()));
 
         Product product = mapper.mapToEntity(persistableProductDto, new Product());
+        product.setUser(user);
         Product newProduct = productRepository.save(product);
 
         return mapper.mapToDTO(newProduct, new ReadableProductDto());
     }
 
     @Override
-    public List<ReadableProductDto> getAllProducts() {
-        List<Product> products = productRepository.findAll();
+    public List<ReadableProductDto> getAllProducts(Long userId) {
+        List<Product> products = productRepository.findAll(userId);
         return products
                 .stream()
                 .map(product -> mapper.mapToDTO(product, new ReadableProductDto()))
@@ -56,8 +65,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ReadableProductDto getProductById(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id.toString()));
+    public ReadableProductDto getProductById(Long id, Long userId) {
+        Product product = productRepository.findById(id, userId);
+        if(product == null) {
+            throw new ResourceNotFoundException("Product", "id", id.toString());
+        }
         return mapper.mapToDTO(product, new ReadableProductDto());
     }
 

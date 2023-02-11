@@ -2,7 +2,9 @@ package com.invoice.management.app.controller;
 
 import com.invoice.management.app.dto.PersistableInvoiceDto;
 import com.invoice.management.app.dto.ReadableInvoiceDto;
+import com.invoice.management.app.security.JwtTokenProvider;
 import com.invoice.management.app.service.InvoiceService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,25 +18,32 @@ import java.util.List;
 public class InvoiceController {
 
     private final InvoiceService invoiceService;
+    private final JwtTokenProvider tokenProvider;
 
-    public InvoiceController(InvoiceService invoiceService) {
+    public InvoiceController(InvoiceService invoiceService, JwtTokenProvider tokenProvider) {
         this.invoiceService = invoiceService;
+        this.tokenProvider = tokenProvider;
     }
 
 //    @PreAuthorize("hasRole('USER')")
     @PostMapping
-    public ResponseEntity<ReadableInvoiceDto> createInvoice(@Valid @RequestBody PersistableInvoiceDto invoiceDto) {
-        return new ResponseEntity<>(invoiceService.createInvoice(invoiceDto), HttpStatus.CREATED);
+    public ResponseEntity<ReadableInvoiceDto> createInvoice(@Valid @RequestBody PersistableInvoiceDto invoiceDto,
+                                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        return new ResponseEntity<>(invoiceService.createInvoice(invoiceDto, userId), HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<ReadableInvoiceDto> getAllInvoices() {
-        return invoiceService.getAllInvoices();
+    public List<ReadableInvoiceDto> getAllInvoices(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        return invoiceService.getAllInvoices(userId);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReadableInvoiceDto> getInvoiceById(@PathVariable(name = "id") Long id) {
-        return ResponseEntity.ok(invoiceService.getInvoiceById(id));
+    public ResponseEntity<ReadableInvoiceDto> getInvoiceById(@PathVariable(name = "id") Long id,
+                                                             @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        return ResponseEntity.ok(invoiceService.getInvoiceById(id, userId));
     }
 
 //    @PreAuthorize("hasRole('USER')")

@@ -2,8 +2,10 @@ package com.invoice.management.app.service.impl;
 
 import com.invoice.management.app.dto.CompanyDto;
 import com.invoice.management.app.entity.Company;
+import com.invoice.management.app.entity.User;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.CompanyRepository;
+import com.invoice.management.app.repository.UserRepository;
 import com.invoice.management.app.service.CompanyService;
 import com.invoice.management.app.service.mapper.CompanyMapper;
 
@@ -16,16 +18,22 @@ import java.util.stream.Collectors;
 public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
     private final CompanyMapper mapper;
 
-    private CompanyServiceImpl(CompanyRepository companyRepository, CompanyMapper mapper) {
+    private CompanyServiceImpl(CompanyRepository companyRepository, CompanyMapper mapper, UserRepository userRepository) {
         this.companyRepository = companyRepository;
         this.mapper = mapper;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public CompanyDto createCompany(CompanyDto companyDto) {
+    public CompanyDto createCompany(CompanyDto companyDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId.toString()));
+
         Company company = mapper.mapToEntity(companyDto, new Company());
+        company.setUser(user);
 
         Company newCompany = companyRepository.save(company);
 
@@ -33,8 +41,9 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public List<CompanyDto> getAllCompanies() {
-        List<Company> companies = companyRepository.findAll();
+    public List<CompanyDto> getAllCompanies(Long userId) {
+        List<Company> companies = companyRepository.findAll(userId);
+
         return companies
                 .stream()
                 .map(company -> mapper.mapToDTO(company, new CompanyDto()))
@@ -42,8 +51,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDto getCompanyById(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company", "id", id.toString()));
+    public CompanyDto getCompanyById(Long id, Long userId) {
+        Company company = companyRepository.findById(id, userId);
+        if(company == null) {
+            throw new ResourceNotFoundException("Company", "id", id.toString());
+        }
         return mapper.mapToDTO(company, new CompanyDto());
     }
 

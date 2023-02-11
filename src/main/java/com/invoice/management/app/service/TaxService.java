@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface TaxService {
 
-    TaxDto createTax(TaxDto taxDto);
+    TaxDto createTax(TaxDto taxDto, Long userId);
 
-    List<TaxDto> getAllTaxes();
+    List<TaxDto> getAllTaxes(Long userId);
 
-    TaxDto getTaxById(Long id);
+    TaxDto getTaxById(Long id, Long userId);
 
     TaxDto updateTax(TaxDto taxDto, Long id);
 

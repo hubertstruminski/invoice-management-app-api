@@ -4,9 +4,11 @@ import com.invoice.management.app.dto.PersistableInvoiceDto;
 import com.invoice.management.app.dto.ReadableInvoiceDto;
 import com.invoice.management.app.entity.Invoice;
 import com.invoice.management.app.entity.Product;
+import com.invoice.management.app.entity.User;
 import com.invoice.management.app.exception.ResourceNotFoundException;
 import com.invoice.management.app.repository.CustomerRepository;
 import com.invoice.management.app.repository.InvoiceRepository;
+import com.invoice.management.app.repository.UserRepository;
 import com.invoice.management.app.service.InvoiceService;
 import com.invoice.management.app.service.mapper.InvoiceMapper;
 
@@ -20,30 +22,38 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private final InvoiceRepository invoiceRepository;
     private final CustomerRepository customerRepository;
+    private final UserRepository userRepository;
     private final InvoiceMapper mapper;
 
     private InvoiceServiceImpl(InvoiceRepository invoiceRepository,
                                CustomerRepository customerRepository,
-                               InvoiceMapper mapper) {
+                               InvoiceMapper mapper,
+                               UserRepository userRepository) {
         this.invoiceRepository = invoiceRepository;
         this.customerRepository = customerRepository;
         this.mapper = mapper;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public ReadableInvoiceDto createInvoice(PersistableInvoiceDto invoiceDto) {
+    public ReadableInvoiceDto createInvoice(PersistableInvoiceDto invoiceDto, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId.toString()));
+
         Long customerId = invoiceDto.getCustomerId();
         customerRepository.findById(customerId).orElseThrow(() ->  new ResourceNotFoundException("Customer", "id", customerId.toString()));
 
         Invoice invoice = mapper.mapPersistableDTOToEntity(invoiceDto, new Invoice());
+        invoice.setUser(user);
+
         Invoice newInvoice = invoiceRepository.save(invoice);
 
         return mapper.mapToReadableDTO(newInvoice, new ReadableInvoiceDto());
     }
 
     @Override
-    public List<ReadableInvoiceDto> getAllInvoices() {
-        List<Invoice> invoices = invoiceRepository.findAll();
+    public List<ReadableInvoiceDto> getAllInvoices(Long userId) {
+        List<Invoice> invoices = invoiceRepository.findAll(userId);
         return invoices
                 .stream()
                 .map(invoice -> mapper.mapToReadableDTO(invoice, new ReadableInvoiceDto()))
@@ -51,8 +61,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public ReadableInvoiceDto getInvoiceById(Long id) {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Invoice", "id", id.toString()));
+    public ReadableInvoiceDto getInvoiceById(Long id, Long userId) {
+        Invoice invoice = invoiceRepository.findById(id, userId);
+        if(invoice == null) {
+            throw new ResourceNotFoundException("Invoice", "id", id.toString());
+        }
         return mapper.mapToReadableDTO(invoice, new ReadableInvoiceDto());
     }
 
