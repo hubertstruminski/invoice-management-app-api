@@ -50,8 +50,10 @@ public class InvoiceController {
     @PutMapping("/{id}")
     public ResponseEntity<ReadableInvoiceDto> updateInvoice(
             @Valid @RequestBody PersistableInvoiceDto invoiceDto,
-            @PathVariable(name = "id") Long id) {
-        ReadableInvoiceDto invoiceResponse = invoiceService.updateInvoice(invoiceDto, id);
+            @PathVariable(name = "id") Long id,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        ReadableInvoiceDto invoiceResponse = invoiceService.updateInvoice(invoiceDto, id, userId);
         return new ResponseEntity<>(invoiceResponse, HttpStatus.OK);
     }
 

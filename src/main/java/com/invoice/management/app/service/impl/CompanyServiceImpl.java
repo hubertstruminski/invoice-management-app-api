@@ -60,14 +60,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public CompanyDto updateCompany(CompanyDto companyDto, Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company", "id", id.toString()));
-
-//        company.setName(companyDto.getName());
-//        company.setStreet(companyDto.getStreet());
-//        company.setPostalCode(companyDto.getPostalCode());
-//        company.setCity(companyDto.getCity());
-//        company.setCountry(companyDto.getCountry());
+    public CompanyDto updateCompany(CompanyDto companyDto, Long id, Long userId) {
+        Company company = companyRepository.findById(id, userId);
+        if(company == null) {
+            throw new ResourceNotFoundException("Company", "id", id.toString());
+        }
 
         mapper.mapToEntity(companyDto, company);
         Company updatedCompany = companyRepository.save(company);

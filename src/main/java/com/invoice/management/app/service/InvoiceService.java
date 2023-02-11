@@ -13,7 +13,7 @@ public interface InvoiceService {
 
     ReadableInvoiceDto getInvoiceById(Long id, Long userId);
 
-    ReadableInvoiceDto updateInvoice(PersistableInvoiceDto invoiceDto, Long id);
+    ReadableInvoiceDto updateInvoice(PersistableInvoiceDto invoiceDto, Long id, Long userId);
 
     void deleteInvoice(Long id, Long userId);
 }

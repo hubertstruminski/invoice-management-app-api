@@ -12,7 +12,7 @@ public interface TaxService {
 
     TaxDto getTaxById(Long id, Long userId);
 
-    TaxDto updateTax(TaxDto taxDto, Long id);
+    TaxDto updateTax(TaxDto taxDto, Long id, Long userId);
 
     void deleteTax(Long id, Long userId);
 }

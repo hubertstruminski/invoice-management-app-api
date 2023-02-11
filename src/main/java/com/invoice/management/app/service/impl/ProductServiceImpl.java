@@ -74,8 +74,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ReadableProductDto updateProduct(PersistableProductDto persistableProductDto, Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id.toString()));
+    public ReadableProductDto updateProduct(PersistableProductDto persistableProductDto, Long id, Long userId) {
+        Product product = productRepository.findById(id, userId);
+        if(product == null) {
+            throw new ResourceNotFoundException("Product", "id", id.toString());
+        }
         mapper.mapToEntity(persistableProductDto, product);
 
         Product updatedProduct = productRepository.save(product);

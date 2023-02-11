@@ -13,7 +13,7 @@ public interface ProductService {
 
     ReadableProductDto getProductById(Long id, Long userId);
 
-    ReadableProductDto updateProduct(PersistableProductDto persistableProductDto, Long id);
+    ReadableProductDto updateProduct(PersistableProductDto persistableProductDto, Long id, Long userId);
 
     void deleteProduct(Long id, Long userId);
 }

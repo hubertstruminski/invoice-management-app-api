@@ -47,8 +47,10 @@ public class TaxController {
     @PutMapping("/{id}")
     public ResponseEntity<TaxDto> updateTax(
             @Valid @RequestBody TaxDto taxDto,
-            @PathVariable(name = "id") Long id) {
-        TaxDto taxResponse = taxService.updateTax(taxDto, id);
+            @PathVariable(name = "id") Long id,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        TaxDto taxResponse = taxService.updateTax(taxDto, id, userId);
         return new ResponseEntity<>(taxResponse, HttpStatus.OK);
     }
 

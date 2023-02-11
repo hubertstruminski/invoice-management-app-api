@@ -62,8 +62,11 @@ public class TaxServiceImpl implements TaxService {
     }
 
     @Override
-    public TaxDto updateTax(TaxDto taxDto, Long id) {
-        Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
+    public TaxDto updateTax(TaxDto taxDto, Long id, Long userId) {
+        Tax tax = taxRepository.findById(id, userId);
+        if(tax == null) {
+            throw new ResourceNotFoundException("Tax", "id", id.toString());
+        }
 
         mapper.mapToEntity(taxDto, tax);
         Tax updatedTax = taxRepository.save(tax);

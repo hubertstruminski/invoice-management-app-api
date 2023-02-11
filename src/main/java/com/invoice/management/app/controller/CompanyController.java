@@ -50,8 +50,11 @@ public class CompanyController {
     @PutMapping("/{id}")
     public ResponseEntity<CompanyDto> updateCompany(
             @Valid @RequestBody CompanyDto companyDto,
-            @PathVariable(name = "id") Long id) {
-        CompanyDto companyResponse = companyService.updateCompany(companyDto, id);
+            @PathVariable(name = "id") Long id,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+
+        CompanyDto companyResponse = companyService.updateCompany(companyDto, id, userId);
         return new ResponseEntity<>(companyResponse, HttpStatus.OK);
     }
 

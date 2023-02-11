@@ -12,7 +12,7 @@ public interface CustomerService {
 
     CustomerDto getCustomerById(Long id, Long userId);
 
-    CustomerDto updateCustomer(CustomerDto customerDto, Long id);
+    CustomerDto updateCustomer(CustomerDto customerDto, Long id, Long userId);
 
     void deleteCustomer(Long id, Long userId);
 }

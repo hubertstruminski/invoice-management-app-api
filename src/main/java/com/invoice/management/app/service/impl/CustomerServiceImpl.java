@@ -59,8 +59,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto updateCustomer(CustomerDto customerDto, Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Customer", "id", id.toString()));
+    public CustomerDto updateCustomer(CustomerDto customerDto, Long id, Long userId) {
+        Customer customer = customerRepository.findById(id, userId);
+        if(customer == null) {
+            throw new ResourceNotFoundException("Customer", "id", id.toString());
+        }
         mapper.mapToEntity(customerDto, customer);
 
         Customer updatedCustomer = customerRepository.save(customer);

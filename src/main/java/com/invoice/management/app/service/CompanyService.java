@@ -12,7 +12,7 @@ public interface CompanyService {
 
     CompanyDto getCompanyById(Long id, Long userId);
 
-    CompanyDto updateCompany(CompanyDto companyDto, Long id);
+    CompanyDto updateCompany(CompanyDto companyDto, Long id, Long userId);
 
     void deleteCompany(Long id, Long userId);
 }

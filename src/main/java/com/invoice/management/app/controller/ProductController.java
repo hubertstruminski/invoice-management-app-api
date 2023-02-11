@@ -48,8 +48,10 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ReadableProductDto> updateProduct(
             @Valid @RequestBody PersistableProductDto persistableProductDto,
-            @PathVariable(name = "id") Long id) {
-        ReadableProductDto productResponse = productService.updateProduct(persistableProductDto, id);
+            @PathVariable(name = "id") Long id,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        ReadableProductDto productResponse = productService.updateProduct(persistableProductDto, id, userId);
         return new ResponseEntity<>(productResponse, HttpStatus.OK);
     }
 

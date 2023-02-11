@@ -46,8 +46,11 @@ public class CustomerController {
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(
             @Valid @RequestBody CustomerDto customerDto,
-            @PathVariable(name = "id") Long id) {
-        CustomerDto customerResponse = customerService.updateCustomer(customerDto, id);
+            @PathVariable(name = "id") Long id,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+
+        CustomerDto customerResponse = customerService.updateCustomer(customerDto, id, userId);
         return new ResponseEntity<>(customerResponse, HttpStatus.OK);
     }
 

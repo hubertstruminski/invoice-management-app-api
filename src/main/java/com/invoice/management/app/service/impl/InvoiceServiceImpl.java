@@ -70,8 +70,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public ReadableInvoiceDto updateInvoice(PersistableInvoiceDto invoiceDto, Long id) {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Invoice", "id", id.toString()));
+    public ReadableInvoiceDto updateInvoice(PersistableInvoiceDto invoiceDto, Long id, Long userId) {
+        Invoice invoice = invoiceRepository.findById(id, userId);
+        if(invoice == null) {
+            throw new ResourceNotFoundException("Invoice", "id", id.toString());
+        }
         Set<Product> beforeProducts = invoice.getProducts();
 
         mapper.mapPersistableDTOToEntity(invoiceDto, invoice);
