@@ -76,8 +76,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public void deleteCompany(Long id) {
-        Company company = companyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Company", "id", id.toString()));
+    public void deleteCompany(Long id, Long userId) {
+        Company company = companyRepository.findById(id, userId);
+        if(company == null) {
+            throw new ResourceNotFoundException("Company", "id", id.toString());
+        }
         companyRepository.delete(company);
     }
 }

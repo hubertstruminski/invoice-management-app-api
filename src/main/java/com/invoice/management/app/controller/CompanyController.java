@@ -56,8 +56,10 @@ public class CompanyController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCompany(@PathVariable(name = "id") Long id) {
-        companyService.deleteCompany(id);
+    public ResponseEntity<Void> deleteCompany(@PathVariable(name = "id") Long id,
+                                              @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        companyService.deleteCompany(id, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

@@ -14,5 +14,5 @@ public interface TaxService {
 
     TaxDto updateTax(TaxDto taxDto, Long id);
 
-    void deleteTax(Long id);
+    void deleteTax(Long id, Long userId);
 }

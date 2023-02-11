@@ -53,8 +53,11 @@ public class TaxController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTax(@PathVariable(name = "id") Long id) {
-        taxService.deleteTax(id);
+    public ResponseEntity<Void> deleteTax(@PathVariable(name = "id") Long id,
+                                          @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+
+        taxService.deleteTax(id, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

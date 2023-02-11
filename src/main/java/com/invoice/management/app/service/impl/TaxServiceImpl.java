@@ -73,8 +73,11 @@ public class TaxServiceImpl implements TaxService {
 
     @Override
     @Transactional
-    public void deleteTax(Long id) {
-        Tax tax = taxRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Tax", "id", id.toString()));
+    public void deleteTax(Long id, Long userId) {
+        Tax tax = taxRepository.findById(id, userId);
+        if(tax == null) {
+            throw new ResourceNotFoundException("Tax", "id", id.toString());
+        }
         List<Product> products = tax.getProducts();
 
         for(Product product: products) {

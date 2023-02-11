@@ -57,8 +57,10 @@ public class InvoiceController {
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable(name = "id") Long id) {
-        invoiceService.deleteInvoice(id);
+    public ResponseEntity<Void> deleteCustomer(@PathVariable(name = "id") Long id,
+                                               @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        invoiceService.deleteInvoice(id, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

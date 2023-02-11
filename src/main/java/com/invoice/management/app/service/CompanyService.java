@@ -14,5 +14,5 @@ public interface CompanyService {
 
     CompanyDto updateCompany(CompanyDto companyDto, Long id);
 
-    void deleteCompany(Long id);
+    void deleteCompany(Long id, Long userId);
 }

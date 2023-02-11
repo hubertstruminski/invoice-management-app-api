@@ -52,8 +52,10 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable(name = "id") Long id) {
-        customerService.deleteCustomer(id);
+    public ResponseEntity<Void> deleteCustomer(@PathVariable(name = "id") Long id,
+                                               @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+        customerService.deleteCustomer(id, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

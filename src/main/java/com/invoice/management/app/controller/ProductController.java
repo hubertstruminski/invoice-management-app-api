@@ -54,8 +54,11 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id) {
-        productService.deleteProduct(id);
+    public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") Long id,
+                                              @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+        Long userId = tokenProvider.getUserIdFromJWT(token.split(" ")[1]);
+
+        productService.deleteProduct(id, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

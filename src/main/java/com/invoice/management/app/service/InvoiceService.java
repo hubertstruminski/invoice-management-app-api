@@ -15,5 +15,5 @@ public interface InvoiceService {
 
     ReadableInvoiceDto updateInvoice(PersistableInvoiceDto invoiceDto, Long id);
 
-    void deleteInvoice(Long id);
+    void deleteInvoice(Long id, Long userId);
 }

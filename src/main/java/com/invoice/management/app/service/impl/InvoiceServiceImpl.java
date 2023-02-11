@@ -84,8 +84,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public void deleteInvoice(Long id) {
-        Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Invoice", "id", id.toString()));
+    public void deleteInvoice(Long id, Long userId) {
+        Invoice invoice = invoiceRepository.findById(id, userId);
+        if(invoice == null) {
+            throw new ResourceNotFoundException("Invoice", "id", id.toString());
+        }
         invoiceRepository.delete(invoice);
     }
 

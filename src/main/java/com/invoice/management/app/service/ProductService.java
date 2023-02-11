@@ -15,5 +15,5 @@ public interface ProductService {
 
     ReadableProductDto updateProduct(PersistableProductDto persistableProductDto, Long id);
 
-    void deleteProduct(Long id);
+    void deleteProduct(Long id, Long userId);
 }

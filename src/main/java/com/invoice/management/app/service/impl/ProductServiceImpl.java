@@ -85,8 +85,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void deleteProduct(Long id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product", "id", id.toString()));
+    public void deleteProduct(Long id, Long userId) {
+        Product product = productRepository.findById(id, userId);
+        if(product == null) {
+            throw new ResourceNotFoundException("Product", "id", id.toString());
+        }
 
         for(Invoice invoice: product.getInvoices()) {
             invoice.removeProduct(product);
